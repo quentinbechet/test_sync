@@ -33,7 +33,7 @@ class Map:
 
         # Create the folium map
         self.map = folium.Map(location=[latitude, longitude], zoom_start=zoom_start, tiles=tiles)
-        self.value = 2
+        self.value = 3
 
 
     def add_layer(self, df_assets, column_value, column_geometry, column_id=None, palette='PuOr', min_value=None, max_value=None, n_colors=100, multi_color=True, single_color='red',
@@ -218,7 +218,7 @@ class Map:
 
         # 3. Determine the geometry type
         geom = df[column_geometry].type[0]
-        self.geom = geom
+
 
         # Preparing the geometry of tuples
         if (geom == 'LineString') | (geom == 'Point'):
