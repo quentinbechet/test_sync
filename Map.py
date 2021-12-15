@@ -218,7 +218,7 @@ class Map:
 
         # 3. Determine the geometry type
         geom = df[column_geometry].type[0]
-        self.geom = geom
+
 
         # Preparing the geometry of tuples for PolyLine
         if (geom == 'LineString') | (geom == 'Point'):
@@ -227,7 +227,7 @@ class Map:
 
 
         # 4. Plot the layer on the map
-        # If geometry is 'LineString'
+
 
 
         # Splitting null values from non-null
@@ -237,6 +237,7 @@ class Map:
 
 
         if multi_color:
+            # Plot for LineString Null and Non-null values
             if geom == 'LineString':
                 # Create a feature group
                 layer = folium.FeatureGroup(name=column_value, show=False)
@@ -254,6 +255,7 @@ class Map:
                 # Add the layer to Map
                 layer.add_to(self.map)
 
+            # Plot for Point Null and Non-null values
             if geom == 'Point':
                 # Create a feature group
                 layer = folium.FeatureGroup(name=column_value, show=False)
@@ -271,6 +273,7 @@ class Map:
                 # Add the layer to Map
                 layer.add_to(self.map)
 
+            # Plot for Polygon Null and Non-null values
             if geom == 'Polygon':
                 # Not null values
                 geo_data = gpd.GeoSeries(df_not_null.set_index(column_id)[column_geometry]).to_json()
@@ -284,6 +287,81 @@ class Map:
                                   line_opacity=0.1,
                                   legend_name=column_value,
                                   show=False).add_to(self.map)
+
+        # If multi_color is False then we will have single_color
+        else:
+            if multi_color == False:
+                # Plot for LineString Null and Non-null values
+                if geom == 'LineString':
+                    # 1. Plot non-null values in single color
+                    # Create a feature group
+                    layer = folium.FeatureGroup(name=column_value, show=False)
+
+                    # Not null values
+                    for _, c in df_not_null.iterrows():
+                        # add the line on the map
+                        folium.PolyLine(c['points'], weight=3, color = single_color).add_to(layer)
+
+                    # 2. Plot null values
+                    if show_missing:
+                        # Null values
+                        for _, c in df_null.iterrows():
+                            # add the line on the map
+                            folium.PolyLine(c['points'], weight=3, color = 'grey').add_to(layer)
+
+                    # Add the layer to Map
+                    layer.add_to(self.map)
+
+                # Plot for Point Null and Non-null values
+                if geom == 'Point':
+                    # 1. Plot non-null values in single color
+                    # Create a feature group
+                    layer = folium.FeatureGroup(name=column_value, show=False)
+
+                    # Not null values
+                    for _, c in df_not_null.iterrows():
+                        # add the line on the map
+                        folium.CircleMarker(c['points'], weight=3, color = single_color).add_to(layer)
+
+                    # 2. Plot null values
+                    if show_missing:
+                        # Null values
+                        for _, c in df_null.iterrows():
+                            # add the line on the map
+                            folium.CircleMarker(c['points'], weight=3, color = 'grey').add_to(layer)
+
+                    # Add the layer to Map
+                    layer.add_to(self.map)
+
+                # Plot for Polygon Non-null values
+                if geom == 'Polygon':
+
+                    if show_missing:
+                        # Null values
+                        geo_data = gpd.GeoSeries(df_null.set_index(column_id)[column_geometry]).to_json()
+                        folium.Choropleth(geo_data=geo_data,
+                                          name=column_value,
+                                          data=df_null,
+                                          columns=[column_id, column_value],
+                                          key_on='feature.'+column_id,
+                                          fill_color='grey',
+                                          fill_opacity=0.5,
+                                          line_opacity=0.1,
+                                          legend_name=column_value,
+                                          show=False).add_to(self.map)
+                    else:
+                        # Not null values
+                        geo_data = gpd.GeoSeries(df_not_null.set_index(column_id)[column_geometry]).to_json()
+                        folium.Choropleth(geo_data=geo_data,
+                                          name=column_value,
+                                          data=df_not_null,
+                                          columns=[column_id, column_value],
+                                          key_on='feature.'+column_id,
+                                          fill_color=single_color,
+                                          fill_opacity=0.5,
+                                          line_opacity=0.1,
+                                          legend_name=column_value,
+                                          show=False).add_to(self.map)
 
     def show(self):
         """
