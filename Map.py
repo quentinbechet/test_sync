@@ -33,7 +33,7 @@ class Map:
 
         # Create the folium map
         self.map = folium.Map(location=[latitude, longitude], zoom_start=zoom_start, tiles=tiles)
-        self.value = 3
+        self.value = 2
 
 
     def add_layer(self, df_assets, column_value, column_geometry, column_id=None, palette='PuOr', min_value=None, max_value=None, n_colors=100, multi_color=True, single_color='red',
