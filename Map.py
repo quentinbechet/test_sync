@@ -218,7 +218,7 @@ class Map:
 
         # 3. Determine the geometry type
         geom = df[column_geometry].type[0]
-
+        self.geom = geom
 
         # Preparing the geometry of tuples
         if (geom == 'LineString') | (geom == 'Point'):
