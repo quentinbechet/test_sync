@@ -284,6 +284,55 @@ class Map:
                                   legend_name=column_value,
                                   show=False).add_to(self.map)
 
+
+        else:
+            if geom == 'LineString':
+                # Create a feature group
+                layer = folium.FeatureGroup(name=column_value, show=False)
+
+                # Not null values
+                for _, c in df_not_null.iterrows():
+                    # add the line on the map
+                    folium.PolyLine(c['points'], weight=3, color = single_color).add_to(layer)
+
+                if show_missing:
+                    # Null values
+                    for _, c in df_null.iterrows():
+                        # add the line on the map
+                        folium.PolyLine(c['points'], weight=3, color = 'grey').add_to(layer)
+                # Add the layer to Map
+                layer.add_to(self.map)
+
+            if geom == 'Point':
+                # Create a feature group
+                layer = folium.FeatureGroup(name=column_value, show=False)
+
+                # Not null values
+                for _, c in df_not_null.iterrows():
+                    # add the line on the map
+                    folium.CircleMarker(c['points'], weight=3, color = single_color).add_to(layer)
+
+                if show_missing:
+                    # Null values
+                    for _, c in df_null.iterrows():
+                        # add the line on the map
+                        folium.CircleMarker(c['points'], weight=3, color = 'grey').add_to(layer)
+                # Add the layer to Map
+                layer.add_to(self.map)
+
+            if geom == 'Polygon':
+                # Not null values
+                geo_data = gpd.GeoSeries(df_not_null.set_index(column_id)[column_geometry]).to_json()
+                folium.Choropleth(geo_data=geo_data,
+                                  name=column_value,
+                                  data=df_not_null,
+                                  columns=[column_id, column_value],
+                                  key_on='feature.'+column_id,
+                                  fill_color=single_color,
+                                  fill_opacity=0.5,
+                                  line_opacity=0.1,
+                                  legend_name=column_value,
+                                  show=False).add_to(self.map)
     def show(self):
         """
         This method displays the map in the notebook where it's been created
