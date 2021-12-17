@@ -110,9 +110,9 @@ class Map:
         else:
             legend_name = legend_label
 
-        # Displaying error message
-        if (legend_name==None) & (multi_color==True):
-            print('Please specify a column value to use multi_color!')
+        # # Displaying error message
+        # if (legend_name==None) & (multi_color==True):
+        #     print('Please specify a column value to use multi_color!')
 
         # Creating a copy of df_assets
         df = df_assets.copy()
