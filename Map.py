@@ -36,7 +36,7 @@ class Map:
         self.value = 5
 
 
-    def add_layer(self, df_assets, column_value, column_geometry, column_id=None, palette='PuOr', min_value=None, max_value=None, n_colors=100, multi_color=True, single_color='red',
+    def add_layer(self, df_assets, column_geometry, column_value=None, column_id=None, palette='PuOr', legend_label=None, min_value=None, max_value=None, n_colors=100, multi_color=True, single_color='red',
                   show_missing=False, show_colorbar=False, line_thickness=3, marker_radius=1):
         '''
         This method creates a new layer on map.
@@ -99,6 +99,21 @@ class Map:
                 - 1,2,....
         '''
 
+
+        # Determinelegend_name
+        if legend_label==None:
+            if multi_color:
+                legend_name = column_value
+            # Check for input
+            else:
+                input('Enter the legend name:')
+        else:
+            legend_name = legend_label
+
+        # Displaying error message
+        if (legend_name==None) & (multi_color==True):
+            print('Please specify a column value to use multi_color!')
+
         # Creating a copy of df_assets
         df = df_assets.copy()
 
@@ -106,10 +121,10 @@ class Map:
         # 1. Checking whether a column_value is continuous or categorical
         # sorting the dataframe by ascending order of the relevant parameter
         # reindexing is used to make sure that the first value has for index 0
-        df_sorted = df.sort_values(by=column_value).reset_index(drop=True).copy()
+        df_sorted = df.sort_values(by=legend_name).reset_index(drop=True).copy()
 
         # creating a boolean stating if the feature we study is continuous or categorical.
-        continuous = type(df_sorted[column_value][0]) not in [str, bool]
+        continuous = type(df_sorted[legend_name][0]) not in [str, bool]
 
 
         # 2. Creating a colormap for the map
@@ -121,20 +136,20 @@ class Map:
                 cmap = plt.cm.get_cmap(palette, n_colors)
                 # Check if min_value of column is None then update it minimum value of column
                 if min_value == None:
-                    min_value_update = df[column_value].min()
+                    min_value_update = df[legend_name].min()
                 else:
                     # If min_value is not None keep the user value
                     min_value_update = min_value
                 # Check if max_value of column is None then update it maximum value of column
                 if max_value == None:
-                    max_value_update = df[column_value].max()
+                    max_value_update = df[legend_name].max()
                 else:
                     # If max_value is not None keep the user value
                     max_value_update = max_value
                 # Create a colormap for the points
                 colormap = cm.LinearColormap(colors=tuple([tuple(x) for x in cmap(range(n_colors))]),
                              index=np.linspace(min_value_update, max_value_update, cmap.N),
-                             vmin=min_value_update, vmax=max_value_update, caption= column_value)
+                             vmin=min_value_update, vmax=max_value_update, caption= legend_name)
 
                 # Add the colormap to the map
                 colormap.add_to(self.map)
@@ -153,7 +168,7 @@ class Map:
 
 
                 # Creating a color column for pipes
-                df['color'] = df[column_value].apply(lambda x: color_value[int((x-min_value_update)/(max_value_update-min_value_update)*(cmap.N-1))] if ~np.isnan(x) else 'Unknown')
+                df['color'] = df[legend_name].apply(lambda x: color_value[int((x-min_value_update)/(max_value_update-min_value_update)*(cmap.N-1))] if ~np.isnan(x) else 'Unknown')
 
 
 
@@ -162,7 +177,7 @@ class Map:
         else:
             # if multi_color is True
             if multi_color == True:
-                n = df[column_value].nunique()
+                n = df[legend_name].nunique()
 
                 # Instantiate colormap
                 cmap = plt.cm.get_cmap(palette)
@@ -191,7 +206,7 @@ class Map:
 
                 # Mapping unique values of column with colormap
                 # List of unique values of column
-                keys = list(df[df[column_value].notna()][column_value].unique())
+                keys = list(df[df[legend_name].notna()][legend_name].unique())
 
                 # Instantiate empty dictionary
                 dic_colors = dict()
@@ -210,7 +225,7 @@ class Map:
                 self.dic_colors = dic_colors
 
                 # Apply the dictionary to each pipe
-                df['color'] = df[column_value].apply(lambda x:dic_colors[x])
+                df['color'] = df[legend_name].apply(lambda x:dic_colors[x])
                 self.df = df.copy()
 
 
@@ -229,16 +244,14 @@ class Map:
         # If geometry is 'LineString'
 
 
-        # Splitting null values from non-null
-        df_not_null = df[df[column_value].notna()]
-        df_null = df[df[column_value].isnull()]
-
-
 
         if multi_color:
+            # Splitting null values from non-null
+            df_not_null = df[df[legend_name].notna()]
+            df_null = df[df[legend_name].isnull()]
             if geom == 'LineString':
                 # Create a feature group
-                layer = folium.FeatureGroup(name=column_value, show=False)
+                layer = folium.FeatureGroup(name=legend_name, show=False)
 
                 # Not null values
                 for _, c in df_not_null.iterrows():
@@ -255,7 +268,7 @@ class Map:
 
             if geom == 'Point':
                 # Create a feature group
-                layer = folium.FeatureGroup(name=column_value, show=False)
+                layer = folium.FeatureGroup(name=legend_name, show=False)
 
                 # Not null values
                 for _, c in df_not_null.iterrows():
@@ -274,70 +287,59 @@ class Map:
                 # Not null values
                 geo_data = gpd.GeoSeries(df_not_null.set_index(column_id)[column_geometry]).to_json()
                 folium.Choropleth(geo_data=geo_data,
-                                  name=column_value,
+                                  name=legend_name,
                                   data=df_not_null,
-                                  columns=[column_id, column_value],
+                                  columns=[column_id, legend_name],
                                   key_on='feature.'+column_id,
                                   fill_color=palette,
                                   fill_opacity=0.5,
                                   line_opacity=0.1,
-                                  legend_name=column_value,
+                                  legend_name=legend_name,
                                   show=False).add_to(self.map)
 
 
         else:
             if geom == 'LineString':
                 # Create a feature group
-                layer = folium.FeatureGroup(name=column_value, show=False)
+                layer = folium.FeatureGroup(name=legend_name, show=False)
 
                 # Not null values
-                for _, c in df_not_null.iterrows():
+                for _, c in df.iterrows():
                     # add the line on the map
                     folium.PolyLine(c['points'], weight=3, color = single_color).add_to(layer)
-
-                if show_missing:
-                    # Null values
-                    for _, c in df_null.iterrows():
-                        # add the line on the map
-                        folium.PolyLine(c['points'], weight=3, color = 'grey').add_to(layer)
                 # Add the layer to Map
                 layer.add_to(self.map)
 
             if geom == 'Point':
                 # Create a feature group
-                layer = folium.FeatureGroup(name=column_value, show=False)
+                layer = folium.FeatureGroup(name=legend_name, show=False)
 
                 # Not null values
-                for _, c in df_not_null.iterrows():
+                for _, c in df.iterrows():
                     # add the line on the map
                     folium.CircleMarker(c['points'], weight=3, color = single_color).add_to(layer)
 
-                if show_missing:
-                    # Null values
-                    for _, c in df_null.iterrows():
-                        # add the line on the map
-                        folium.CircleMarker(c['points'], weight=3, color = 'grey').add_to(layer)
                 # Add the layer to Map
                 layer.add_to(self.map)
 
             if geom == 'Polygon':
                 # Not null values
-                geo_data = gpd.GeoSeries(df_not_null.set_index(column_id)[column_geometry]).to_json()
+                geo_data = gpd.GeoSeries(df.set_index(column_id)[column_geometry]).to_json()
                 folium.Choropleth(geo_data=geo_data,
-                                  name=column_value,
-                                  data=df_not_null,
-                                  columns=[column_id, column_value],
+                                  name=legend_name,
+                                  data=df,
+                                  columns=[column_id, legend_name],
                                   key_on='feature.'+column_id,
                                   fill_color=single_color,
                                   fill_opacity=0.5,
                                   line_opacity=0.1,
-                                  legend_name=column_value,
+                                  legend_name=legend_name,
                                   show=False).add_to(self.map)
     def show(self):
         """
         This method displays the map in the notebook where it's been created
         """
-        
+
         folium.LayerControl().add_to(self.map)
         # Displaying the map using the Folium method
         display(self.map)
