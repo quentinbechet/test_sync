@@ -100,13 +100,13 @@ class Map:
         '''
 
 
-        # Determinelegend_name
+        # Determine legend_name
         if legend_label==None:
             if multi_color:
                 legend_name = column_value
             # Check for input
             else:
-                input('Enter the legend name:')
+                legend_name = input('Enter the legend name:')
         else:
             legend_name = legend_label
 
