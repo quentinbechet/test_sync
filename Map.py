@@ -36,21 +36,23 @@ class Map:
         self.value = 5
 
 
-    def add_layer(self, df_assets, column_geometry, column_value=None, column_id=None, palette='PuOr', legend_label=None, min_value=None, max_value=None, n_colors=100, multi_color=True, single_color='red',
-                  show_missing=False, show_colorbar=False, color_weight=1, line_thickness=3, marker_radius=1):
+    def add_layer(self, df_assets, column_geometry, column_value=None, column_id=None, palette='PuOr', legend_label=None, min_value=None, max_value=None, n_colors=100, multi_color=True,
+    single_color='red', show_missing=False, show_colorbar=False, color_weight=3, line_thickness=3, marker_radius=1):
         '''
         This method creates a new layer on map.
 
         :param df_assets: dataframe
             dataframe we want to use create a layer on map.
-        :param column_value: string
-            column_value is the column name of the dataframe we want to
-            generate a layer.
         :param column_geometry: geometry
             column_geometry is the geometry of the dataframe we are using
             to generate a layer.
+        :param column_value: string
+            column_value is the column name of the dataframe we want to
+            generate a layer.
+            Default value: None
         :param column_id: string
             column_id is the name of the id
+            Default value: None
         :param palette: string
             Defines the type of palette we want to use to generate colormap.
             Possible values include:
@@ -58,6 +60,8 @@ class Map:
                 - 'RdBu'
                 - 'PiYG'
             More colors for colormap available at: https://matplotlib.org/stable/tutorials/colors/colormaps.html
+        :param legend_label: string
+            legend_label is the name of layer you want to give
         :param min_value: float
             min_value is the minimum value of column_value.
         :param max_value: float
@@ -87,6 +91,9 @@ class Map:
         :param show_colorbar: bool
             Defines whether you want to display colorbar for the layer or not.
             Default value: False
+        :param color_weight: int
+            Defines the weight of color on map.
+            Default value: 3
         :param line_thickness: int
             Defines the thickness of line on the map.
             Default value: 3
@@ -105,24 +112,10 @@ class Map:
         else:
             legend_name = column_value
 
-
-        # # Determine legend_name
-        # if legend_label == None:
-        #     if multi_color:
-        #         legend_name = column_value
-        #     # Check for input
-        #     else:
-        #         legend_name = input('Enter the legend name:')
-        # else:
-        #     legend_name = legend_label
-        #
-        # # Displaying error message
-        # if (legend_name==None) & (multi_color==False):
-        #     print('Please specify a column value to use multi_color!')
-
         # Creating a copy of df_assets
         df = df_assets.copy()
 
+        # Execute below statements if column_value and legend_name is same
         if legend_name == column_value:
             # Creating a layer
             # 1. Checking whether a column_value is continuous or categorical
@@ -185,6 +178,7 @@ class Map:
 
 
         else:
+            # Execute only if legend_name is equal to column_value
             if legend_name == column_value:
                 # if multi_color is True
                 if multi_color == True:
@@ -252,10 +246,7 @@ class Map:
 
 
         # 4. Plot the layer on the map
-        # If geometry is 'LineString'
-
-
-
+        # if multi_color is True
         if multi_color:
             # Splitting null values from non-null
             df_not_null = df[df[legend_name].notna()]
@@ -347,21 +338,24 @@ class Map:
                                   legend_name=legend_name,
                                   show=False).add_to(self.map)
 
-    def show(self):
+    def show_or_save(self, option_show=False, option_save=False):
         """
-        This method displays the map in the notebook where it's been created
+        :param option_show: bool
+            Defines the option whether to show map or not.
+        :param option_save: bool
+            Defines the option whether to save map or not.
+        This method shows and saves the map in html format where it's been created
         """
 
+        # Adding a LayerControl to map
         folium.LayerControl().add_to(self.map)
-        # Displaying the map
-        display(self.map)
 
-    def save(self):
-        """
-        This method displays the map in the notebook where it's been created
-        """
+        # Option to display the map
+        if option_show:
+            display(self.map)
 
-        folium.LayerControl().add_to(self.map)
-        map_name = input('Enter name of map:')
-        # Saving the map
-        self.map.save(map_name+'.html')
+        # Option to save the map
+        if option_save:
+            map_name = input('Enter name of map:')
+            # Saving the map
+            self.map.save(map_name+'.html')
