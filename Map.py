@@ -284,13 +284,13 @@ class Map:
                 # Not null values
                 for _, c in df_not_null.iterrows():
                     # add the line on the map
-                    folium.CircleMarker(location = [c['points'][0][0], c['points'][0][1]], weight=color_weight, radius=marker_radius, color=c['color']).add_to(layer)
+                    folium.CircleMarker(location = [c['points'][0][0], c['points'][0][1]], radius=marker_radius, color=c['color']).add_to(layer)
 
                 if show_missing:
                     # Null values
                     for _, c in df_null.iterrows():
                         # add the line on the map
-                        folium.CircleMarker(location = [c['points'][0][0], c['points'][0][1]], weight=color_weight, radius=marker_radius, color='grey').add_to(layer)
+                        folium.CircleMarker(location = [c['points'][0][0], c['points'][0][1]], radius=marker_radius, color='grey').add_to(layer)
                 # Add the layer to Map
                 layer.add_to(self.map)
 
@@ -328,7 +328,7 @@ class Map:
                 # Not null values
                 for _, c in df.iterrows():
                     # add the line on the map
-                    folium.CircleMarker(location = [c['points'][0][0], c['points'][0][1]], weight=color_weight, radius=marker_radius, color=single_color).add_to(layer)
+                    folium.CircleMarker(location = [c['points'][0][0], c['points'][0][1]], radius=marker_radius, color=single_color).add_to(layer)
 
                 # Add the layer to Map
                 layer.add_to(self.map)
