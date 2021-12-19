@@ -346,11 +346,22 @@ class Map:
                                   line_opacity=0.1,
                                   legend_name=legend_name,
                                   show=False).add_to(self.map)
+
     def show(self):
         """
         This method displays the map in the notebook where it's been created
         """
 
         folium.LayerControl().add_to(self.map)
-        # Displaying the map using the Folium method
+        # Displaying the map
         display(self.map)
+
+    def save(self):
+        """
+        This method displays the map in the notebook where it's been created
+        """
+
+        folium.LayerControl().add_to(self.map)
+        map_name = input('Enter name of map:')
+        # Saving the map
+        self.map.save(map_name+'.html')
