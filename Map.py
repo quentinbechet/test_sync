@@ -99,32 +99,39 @@ class Map:
                 - 1,2,....
         '''
 
-
         # Determine legend_name
-        if legend_label==None:
-            if multi_color:
-                legend_name = column_value
-            # Check for input
-            else:
-                legend_name = input('Enter the legend name:')
-        else:
+        if legend_label != None:
             legend_name = legend_label
+        else:
+            legend_name = column_value
 
+
+        # # Determine legend_name
+        # if legend_label == None:
+        #     if multi_color:
+        #         legend_name = column_value
+        #     # Check for input
+        #     else:
+        #         legend_name = input('Enter the legend name:')
+        # else:
+        #     legend_name = legend_label
+        #
         # # Displaying error message
-        # if (legend_name==None) & (multi_color==True):
+        # if (legend_name==None) & (multi_color==False):
         #     print('Please specify a column value to use multi_color!')
 
         # Creating a copy of df_assets
         df = df_assets.copy()
 
-        # Creating a layer
-        # 1. Checking whether a column_value is continuous or categorical
-        # sorting the dataframe by ascending order of the relevant parameter
-        # reindexing is used to make sure that the first value has for index 0
-        df_sorted = df.sort_values(by=legend_name).reset_index(drop=True).copy()
+        if legend_name == column_value:
+            # Creating a layer
+            # 1. Checking whether a column_value is continuous or categorical
+            # sorting the dataframe by ascending order of the relevant parameter
+            # reindexing is used to make sure that the first value has for index 0
+            df_sorted = df.sort_values(by=legend_name).reset_index(drop=True).copy()
 
-        # creating a boolean stating if the feature we study is continuous or categorical.
-        continuous = type(df_sorted[legend_name][0]) not in [str, bool]
+            # creating a boolean stating if the feature we study is continuous or categorical.
+            continuous = type(df_sorted[legend_name][0]) not in [str, bool]
 
 
         # 2. Creating a colormap for the map
