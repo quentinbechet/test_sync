@@ -244,7 +244,6 @@ class Map:
 
         # 3. Determine the geometry type
         geom = df[column_geometry].type[0]
-        print(geom)
         
         # Preparing the geometry of tuples for PolyLine
         if (geom == 'LineString') | (geom == 'Point'):
