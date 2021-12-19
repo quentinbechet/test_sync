@@ -133,6 +133,9 @@ class Map:
             # creating a boolean stating if the feature we study is continuous or categorical.
             continuous = type(df_sorted[legend_name][0]) not in [str, bool]
 
+        else:
+            continuous = False
+
 
         # 2. Creating a colormap for the map
         # if column_value continuous
@@ -182,58 +185,59 @@ class Map:
 
 
         else:
-            # if multi_color is True
-            if multi_color == True:
-                n = df[legend_name].nunique()
+            if legend_name == column_value:
+                # if multi_color is True
+                if multi_color == True:
+                    n = df[legend_name].nunique()
 
-                # Instantiate colormap
-                cmap = plt.cm.get_cmap(palette)
+                    # Instantiate colormap
+                    cmap = plt.cm.get_cmap(palette)
 
-                # List of tuples
-                cmap_list = list(cmap.colors)
+                    # List of tuples
+                    cmap_list = list(cmap.colors)
 
-                # Create a list of lists
-                cmap_list_of_lists = [list(ele) for ele in cmap_list]
+                    # Create a list of lists
+                    cmap_list_of_lists = [list(ele) for ele in cmap_list]
 
-                # Append transparency value to each RGB value for hexadecimal conversion
-                for i in range(len(cmap_list_of_lists)):
-                    cmap_list_of_lists[i].append(1.0)
+                    # Append transparency value to each RGB value for hexadecimal conversion
+                    for i in range(len(cmap_list_of_lists)):
+                        cmap_list_of_lists[i].append(1.0)
 
-                # Create an empty list or hexadecimal values
-                color_value = []
+                    # Create an empty list or hexadecimal values
+                    color_value = []
 
-                # Append the hexadecimal values to above list
-                for i in range(len(cmap_list_of_lists)):
-                    colors = matplotlib.colors.rgb2hex(cmap_list_of_lists[i])
-                    color_value.append(colors)
+                    # Append the hexadecimal values to above list
+                    for i in range(len(cmap_list_of_lists)):
+                        colors = matplotlib.colors.rgb2hex(cmap_list_of_lists[i])
+                        color_value.append(colors)
 
-                # Select first n unique hexadecimal color values from list
-                color_value = color_value[:n]
+                    # Select first n unique hexadecimal color values from list
+                    color_value = color_value[:n]
 
 
-                # Mapping unique values of column with colormap
-                # List of unique values of column
-                keys = list(df[df[legend_name].notna()][legend_name].unique())
+                    # Mapping unique values of column with colormap
+                    # List of unique values of column
+                    keys = list(df[df[legend_name].notna()][legend_name].unique())
 
-                # Instantiate empty dictionary
-                dic_colors = dict()
+                    # Instantiate empty dictionary
+                    dic_colors = dict()
 
-                # Counter
-                p = 0
+                    # Counter
+                    p = 0
 
-                # Assign colors to unique values of column
-                for key in keys:
-                    dic_colors[key] = color_value[p]
-                    p = p+1
+                    # Assign colors to unique values of column
+                    for key in keys:
+                        dic_colors[key] = color_value[p]
+                        p = p+1
 
-                dic_colors[None] = 'Unknown'
-                dic_colors[np.nan] = 'Unknown'
+                    dic_colors[None] = 'Unknown'
+                    dic_colors[np.nan] = 'Unknown'
 
-                self.dic_colors = dic_colors
+                    self.dic_colors = dic_colors
 
-                # Apply the dictionary to each pipe
-                df['color'] = df[legend_name].apply(lambda x:dic_colors[x])
-                self.df = df.copy()
+                    # Apply the dictionary to each pipe
+                    df['color'] = df[legend_name].apply(lambda x:dic_colors[x])
+                    self.df = df.copy()
 
 
 
