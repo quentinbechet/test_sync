@@ -37,7 +37,7 @@ class Map:
 
 
     def add_layer(self, df_assets, column_geometry, column_value=None, column_id=None, palette='PuOr', legend_label=None, min_value=None, max_value=None, n_colors=100, multi_color=True, single_color='red',
-                  show_missing=False, show_colorbar=False, line_thickness=3, marker_radius=1):
+                  show_missing=False, show_colorbar=False, color_weight=1, line_thickness=3, marker_radius=1):
         '''
         This method creates a new layer on map.
 
@@ -267,13 +267,13 @@ class Map:
                 # Not null values
                 for _, c in df_not_null.iterrows():
                     # add the line on the map
-                    folium.PolyLine(c['points'], weight=3, color = c['color']).add_to(layer)
+                    folium.PolyLine(c['points'], weight=color_weight, color = c['color']).add_to(layer)
 
                 if show_missing:
                     # Null values
                     for _, c in df_null.iterrows():
                         # add the line on the map
-                        folium.PolyLine(c['points'], weight=3, color = 'grey').add_to(layer)
+                        folium.PolyLine(c['points'], weight=color_weight, color = 'grey').add_to(layer)
                 # Add the layer to Map
                 layer.add_to(self.map)
 
@@ -284,13 +284,13 @@ class Map:
                 # Not null values
                 for _, c in df_not_null.iterrows():
                     # add the line on the map
-                    folium.CircleMarker(location = [c['points'][0][0], c['points'][0][1]], weight=3, color = c['color']).add_to(layer)
+                    folium.CircleMarker(location = [c['points'][0][0], c['points'][0][1]], weight=color_weight, color = c['color']).add_to(layer)
 
                 if show_missing:
                     # Null values
                     for _, c in df_null.iterrows():
                         # add the line on the map
-                        folium.CircleMarker(location = [c['points'][0][0], c['points'][0][1]], weight=3, color = 'grey').add_to(layer)
+                        folium.CircleMarker(location = [c['points'][0][0], c['points'][0][1]], weight=color_weight, color = 'grey').add_to(layer)
                 # Add the layer to Map
                 layer.add_to(self.map)
 
@@ -317,7 +317,7 @@ class Map:
                 # Not null values
                 for _, c in df.iterrows():
                     # add the line on the map
-                    folium.PolyLine(c['points'], weight=3, color = single_color).add_to(layer)
+                    folium.PolyLine(c['points'], weight=color_weight, color = single_color).add_to(layer)
                 # Add the layer to Map
                 layer.add_to(self.map)
 
@@ -328,7 +328,7 @@ class Map:
                 # Not null values
                 for _, c in df.iterrows():
                     # add the line on the map
-                    folium.CircleMarker(location = [c['points'][0][0], c['points'][0][1]], weight=3, color = single_color).add_to(layer)
+                    folium.CircleMarker(location = [c['points'][0][0], c['points'][0][1]], weight=color_weight, color = single_color).add_to(layer)
 
                 # Add the layer to Map
                 layer.add_to(self.map)
