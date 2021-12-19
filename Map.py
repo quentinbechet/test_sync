@@ -244,7 +244,7 @@ class Map:
 
         # 3. Determine the geometry type
         geom = df[column_geometry].type[0]
-        
+
         # Preparing the geometry of tuples for PolyLine
         if (geom == 'LineString') | (geom == 'Point'):
             df['points'] = df.apply(lambda x: [ (y[1],y[0]) for y in x[column_geometry].coords], axis=1)
@@ -284,13 +284,13 @@ class Map:
                 # Not null values
                 for _, c in df_not_null.iterrows():
                     # add the line on the map
-                    folium.CircleMarker(c['points'], weight=3, color = c['color']).add_to(layer)
+                    folium.CircleMarker(location = [c['points'][0][0], c['points'][0][1]], weight=3, color = c['color']).add_to(layer)
 
                 if show_missing:
                     # Null values
                     for _, c in df_null.iterrows():
                         # add the line on the map
-                        folium.CircleMarker(c['points'], weight=3, color = 'grey').add_to(layer)
+                        folium.CircleMarker(location = [c['points'][0][0], c['points'][0][1]], weight=3, color = 'grey').add_to(layer)
                 # Add the layer to Map
                 layer.add_to(self.map)
 
@@ -328,7 +328,7 @@ class Map:
                 # Not null values
                 for _, c in df.iterrows():
                     # add the line on the map
-                    folium.CircleMarker(c['points'], weight=3, color = single_color).add_to(layer)
+                    folium.CircleMarker(location = [c['points'][0][0], c['points'][0][1]], weight=3, color = single_color).add_to(layer)
 
                 # Add the layer to Map
                 layer.add_to(self.map)
