@@ -338,7 +338,7 @@ class Map:
     # Adding a legend method
     def add_categorical_legend(self, map, title, colors, labels):
         legend_categories = ""
-        for label, color in dic_colors.items():
+        for label, color in self.dic_colors.items():
             legend_categories += f"<li><span style='background:{color}'></span>{label}</li>"
 
         legend_html = f"""
@@ -429,7 +429,7 @@ class Map:
 
         self.map.get_root().header.add_child(folium.Element(script + css))
 
-        
+
 
     def show_or_save(self, option_show=False, option_save=False, map_name=None):
         """
