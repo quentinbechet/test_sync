@@ -118,7 +118,7 @@ class Map:
         df = df_assets.copy()
 
         # Execute below statements if column_value and legend_name is same
-        if legend_name == column_value:
+        if column_value != None:
             # Creating a layer
             # 1. Checking whether a column_value is continuous or categorical
             # sorting the dataframe by ascending order of the relevant parameter
@@ -128,60 +128,55 @@ class Map:
             # creating a boolean stating if the feature we study is continuous or categorical.
             continuous = type(df_sorted[legend_name][0]) not in [str, bool]
 
-        else:
-            continuous = False
+
+            # 2. Creating a colormap for the map
+            # if column_value continuous
+            if continuous:
+                # if multi_color is True
+                if multi_color == True:
+                    # Instantiate colormap
+                    cmap = plt.cm.get_cmap(palette, n_colors)
+                    # Check if min_value of column is None then update it minimum value of column
+                    if min_value == None:
+                        min_value_update = df[legend_name].min()
+                    else:
+                        # If min_value is not None keep the user value
+                        min_value_update = min_value
+                    # Check if max_value of column is None then update it maximum value of column
+                    if max_value == None:
+                        max_value_update = df[legend_name].max()
+                    else:
+                        # If max_value is not None keep the user value
+                        max_value_update = max_value
+                    # Create a colormap for the points
+                    colormap = cm.LinearColormap(colors=tuple([tuple(x) for x in cmap(range(n_colors))]),
+                                 index=np.linspace(min_value_update, max_value_update, cmap.N),
+                                 vmin=min_value_update, vmax=max_value_update, caption= legend_name)
+
+                    # Add the colormap to the map
+                    colormap.add_to(self.map)
 
 
-        # 2. Creating a colormap for the map
-        # if column_value continuous
-        if continuous:
-            # if multi_color is True
-            if multi_color == True:
-                # Instantiate colormap
-                cmap = plt.cm.get_cmap(palette, n_colors)
-                # Check if min_value of column is None then update it minimum value of column
-                if min_value == None:
-                    min_value_update = df[legend_name].min()
-                else:
-                    # If min_value is not None keep the user value
-                    min_value_update = min_value
-                # Check if max_value of column is None then update it maximum value of column
-                if max_value == None:
-                    max_value_update = df[legend_name].max()
-                else:
-                    # If max_value is not None keep the user value
-                    max_value_update = max_value
-                # Create a colormap for the points
-                colormap = cm.LinearColormap(colors=tuple([tuple(x) for x in cmap(range(n_colors))]),
-                             index=np.linspace(min_value_update, max_value_update, cmap.N),
-                             vmin=min_value_update, vmax=max_value_update, caption= legend_name)
+                    # Converting list of tuples to list of lists
+                    cmap_list = [list(tuple(x)) for x in cmap(range(n_colors))]
 
-                # Add the colormap to the map
-                colormap.add_to(self.map)
+                    # Empty list
+                    color_value = []
+
+                    # Append hexadecimal values to the above list
+                    for i in range(len(cmap_list)):
+                        colors = matplotlib.colors.rgb2hex(cmap_list[i])
+                        color_value.append(colors)
 
 
-                # Converting list of tuples to list of lists
-                cmap_list = [list(tuple(x)) for x in cmap(range(n_colors))]
-
-                # Empty list
-                color_value = []
-
-                # Append hexadecimal values to the above list
-                for i in range(len(cmap_list)):
-                    colors = matplotlib.colors.rgb2hex(cmap_list[i])
-                    color_value.append(colors)
-
-
-                # Creating a color column for pipes
-                df['color'] = df[legend_name].apply(lambda x: color_value[int((x-min_value_update)/(max_value_update-min_value_update)*(cmap.N-1))] if ~np.isnan(x) else 'Unknown')
+                    # Creating a color column for pipes
+                    df['color'] = df[legend_name].apply(lambda x: color_value[int((x-min_value_update)/(max_value_update-min_value_update)*(cmap.N-1))] if ~np.isnan(x) else 'Unknown')
 
 
 
 
 
-        else:
-            # Execute only if legend_name is equal to column_value
-            if legend_name == column_value:
+            else:
                 # if multi_color is True
                 if multi_color == True:
                     n = df[legend_name].nunique()
