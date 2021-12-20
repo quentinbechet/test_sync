@@ -135,6 +135,8 @@ class Map:
                 count_con += 1
             else:
                 count_cat += 1
+            print(count_con)
+            print(count_cat)
 
             # 2. Creating a colormap for the map
             # if column_value continuous
