@@ -109,6 +109,8 @@ class Map:
         # Determine legend_name
         if legend_label != None:
             legend_name = legend_label
+        elif legend_label == None & column_value == None:
+            legend_name = input('Enter the layer name:')
         else:
             legend_name = column_value
 
@@ -338,7 +340,9 @@ class Map:
                                   legend_name=legend_name,
                                   show=False).add_to(self.map)
 
-    def show_or_save(self, option_show=False, option_save=False):
+    # Adding a legend method
+
+    def show_or_save(self, option_show=False, option_save=False, map_name=None):
         """
         :param option_show: bool
             Defines the option whether to show map or not.
