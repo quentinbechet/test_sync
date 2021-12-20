@@ -336,7 +336,7 @@ class Map:
                                   show=False).add_to(self.map)
 
     # Adding a legend method
-    def add_categorical_legend(self, map, title=None):
+    def add_categorical_legend(self, title=None):
         if title == None:
             title = input('Enter title for legend:')
         else:
@@ -439,6 +439,8 @@ class Map:
             Defines the option whether to show map or not.
         :param option_save: bool
             Defines the option whether to save map or not.
+        :param map_name: string
+            Defines the name of the map.
         This method shows and saves the map in html format where it's been created
         """
 
@@ -451,6 +453,9 @@ class Map:
 
         # Option to save the map
         if option_save:
-            map_name = input('Enter name of map:')
+            if map_name == None:
+                map_name = input('Enter name of map:')
+            else:
+                map_name = map_name
             # Saving the map
             self.map.save(map_name+'.html')
