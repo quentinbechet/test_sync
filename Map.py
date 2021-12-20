@@ -433,8 +433,6 @@ class Map:
 
         self.map.get_root().header.add_child(folium.Element(script + css))
 
-        return self.map
-
     def show_or_save(self, option_show=False, option_save=False, map_name=None):
         """
         :param option_show: bool
