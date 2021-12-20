@@ -128,6 +128,7 @@ class Map:
             # creating a boolean stating if the feature we study is continuous or categorical.
             continuous = type(df_sorted[legend_name][0]) not in [str, bool]
 
+            self.continuous = continuous
 
             # 2. Creating a colormap for the map
             # if column_value continuous
