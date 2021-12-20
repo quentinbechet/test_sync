@@ -109,7 +109,7 @@ class Map:
         # Determine legend_name
         if legend_label != None:
             legend_name = legend_label
-        elif legend_label == None & column_value == None:
+        elif (legend_label == None) & (column_value == None):
             legend_name = input('Enter the layer name:')
         else:
             legend_name = column_value
