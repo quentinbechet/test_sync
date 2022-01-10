@@ -385,9 +385,11 @@ class Map:
         <div class='legend-title'>Legend (draggable!)</div>
         <div class='legend-scale'>
             <ul class='legend-labels'>
-                % for label, color in self.dic_colors.items:
-                <li><span style='background:{color}'></span>{label}</li>
-                % endfor
+                {% for label, color in self.dic_colors.items:}
+                    <tr>
+                        <li><span style='background:{color}'></span>{label}</li>
+                    </tr>
+                {% endfor}
             </ul>
           </div>
         </div>
