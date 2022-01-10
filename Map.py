@@ -335,8 +335,6 @@ class Map:
                                   show=False).add_to(self.map)
 
 
-    # Adding a legend method
-    def add_categorical_legend(self, title=None):
 
     def add_categorical_legend(self, title=None):
         if title == None:
