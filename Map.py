@@ -344,7 +344,7 @@ class Map:
             title = title
         legend_categories = ""
         for label, color in self.dic_colors.items():
-            legend_categories += f"<li><span style='background:{color}'></span>{label}</li>"
+            legend_categories += f"<li><span style='background:{color}'></span>{label}</li>".format(color=color, label=label)
 
         template = """
         {% macro html(this, kwargs) %}
@@ -431,7 +431,7 @@ class Map:
                 color: #777;
                 }
         </style>
-        {% endmacro %}""".format(legend_categories=legend_categories)
+        {% endmacro %}"""
 
         macro = MacroElement()
         macro._template = Template(template)
