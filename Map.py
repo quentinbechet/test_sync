@@ -342,9 +342,9 @@ class Map:
             title = input('Enter title for legend:')
         else:
             title = title
-        legend_categories = ""
+        legend_categories = []
         for label, color in self.dic_colors.items():
-            legend_categories += f"<li><span style='background:{color}'></span>{label}</li>"
+            legend_categories.append("<li><span style='background:{color}'></span>{label}</li>")
 
         legend_html = f""
         <div id='maplegend' class='maplegend'>
