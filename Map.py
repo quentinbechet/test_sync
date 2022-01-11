@@ -385,7 +385,7 @@ class Map:
         <div class='legend-title'>Legend (draggable!)</div>
         <div class='legend-scale'>
             <ul class='legend-labels'>
-            $legend_categories
+                <li><span style='background:{color}'></span>{label}</li>
             </ul>
         </div>
         </div>
@@ -434,7 +434,7 @@ class Map:
         {% endmacro %}"""
 
         macro = MacroElement()
-        macro._template = Template(template)
+        macro._template = Template(template).safe_substitute(legend_categories=legend_categories)
 
         self.map.get_root().add_child(macro)
 
