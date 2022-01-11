@@ -442,11 +442,11 @@ class Map:
     #
     #     self.map.get_root().add_child(macro)
 
-    def add_categorical_legend(self, folium_map: self.Map,
+    def add_categorical_legend(self, folium_map,
     title: str,
     colors: List[str],
     labels: List[str],
-    ) -> self.Map:
+    ):
         """
         Given a Folium map, add to it a categorical legend with the given title, colors, and corresponding labels.
         The given colors and labels will be listed in the legend from top to bottom.
