@@ -388,6 +388,9 @@ class Map:
         <div class='legend-scale'>
             <ul class='legend-labels'>
         """
+        # Remove Unknown colors keys
+        self.dic_colors = {key:value for key, value in self.dic_colors.items() if (value is not 'Unknown')}
+
         for label, color in self.dic_colors.items():
             template += f"<li><span style='background:{color}'></span>{label}</li>"
 
