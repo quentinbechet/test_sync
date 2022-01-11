@@ -432,7 +432,7 @@ class Map:
         </style>
         """
 
-        self.map.get_root().add_child(folium.Element(script + css))
+        self.map.get_root().header.add_child(folium.Element(script + css))
 
     def show_or_save(self, option_show=False, option_save=False, map_name=None):
         """
