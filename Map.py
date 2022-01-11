@@ -409,7 +409,7 @@ class Map:
             width: 30px;
             margin-right: 5px;
             margin-left: 0;
-            border: 0px solid #ccc;
+            border: 1px solid #999;
             }
           .maplegend .legend-source {
             font-size: 80%;
