@@ -342,12 +342,10 @@ class Map:
             title = input('Enter title for legend:')
         else:
             title = title
-        legend_categories = ""
-        for label, color in self.dic_colors.items():
-            legend_categories += f"<li><span style='background:{color}'></span>{label}</li>"
 
-        template = """
-        {% macro html(this, kwargs) %}
+
+        template = f"""
+        {{% macro html(this, kwargs) %}}
 
         <!doctype html>
         <html lang="en">
@@ -361,10 +359,10 @@ class Map:
             <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
             <script>
-            $( function() {
-                $( "#maplegend" ).draggable({
-                                start: function (event, ui) {
-                                    $(this).css({
+            $( function()
+                $( "#maplegend" ).draggable(
+                                start: function (event, ui)
+                                    $(this).css(
                                         right: "auto",
                                         top: "auto",
                                         bottom: "auto"
@@ -373,7 +371,7 @@ class Map:
                             });
         });
 
-        </script>
+            </script>
         </head>
         <body>
 
@@ -382,13 +380,15 @@ class Map:
             style='position: absolute; z-index:9999; border:2px solid grey; background-color:rgba(255, 255, 255, 0.8);
             border-radius:6px; padding: 10px; font-size:14px; right: 20px; bottom: 20px;'>
 
-        <div class='legend-title'>Legend (draggable!)</div>
+        <div class='legend-title'>{title}</div>
         <div class='legend-scale'>
             <ul class='legend-labels'>
-                <li><span style='background:red;opacity:0.7;'></span>Big</li>
-                <li><span style='background:orange;opacity:0.7;'></span>Medium</li>
-                <li><span style='background:green;opacity:0.7;'></span>Small</li>
+        """
 
+        for label, color in self.dic_colors.items():
+            template += f"<li><span style='background:{color}'></span>{label}</li>"
+
+        template += """
             </ul>
         </div>
         </div>
@@ -434,8 +434,9 @@ class Map:
             .maplegend a {
                 color: #777;
                 }
-            </style>
-            {% endmacro %}"""
+        </style>
+        {% endmacro %}
+        """
 
         macro = MacroElement()
         macro._template = Template(template)
