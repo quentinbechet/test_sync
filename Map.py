@@ -1,5 +1,5 @@
 # IMPORTS
-
+from branca.element import Template, MacroElement
 import folium
 import matplotlib.pyplot as plt
 import matplotlib
@@ -337,52 +337,215 @@ class Map:
 
 
 
-    def add_categorical_legend(self, title=None):
-        if title == None:
-            title = input('Enter title for legend:')
-        else:
-            title = title
-        legend_categories = ""
-        for label, color in self.dic_colors.items():
-            legend_categories += f"<li><span style='background:{color}'></span>{label}</li>"
+    # def add_categorical_legend(self, title=None):
+    #     if title == None:
+    #         title = input('Enter title for legend:')
+    #     else:
+    #         title = title
+    #     legend_categories = ""
+    #     for label, color in self.dic_colors.items():
+    #         legend_categories += f"<li><span style='background:{color}'></span>{label}</li>"
+    #
+    #     template = """
+    #     {% macro html(this, kwargs) %}
+    #
+    #     <!doctype html>
+    #     <html lang="en">
+    #     <head>
+    #         <meta charset="utf-8">
+    #         <meta name="viewport" content="width=device-width, initial-scale=1">
+    #         <title>jQuery UI Draggable - Default functionality</title>
+    #         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    #
+    #         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    #         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    #
+    #         <script>
+    #         $( function() {
+    #             $( "#maplegend" ).draggable({
+    #                             start: function (event, ui) {
+    #                                 $(this).css({
+    #                                     right: "auto",
+    #                                     top: "auto",
+    #                                     bottom: "auto"
+    #                                 });
+    #                             }
+    #                         });
+    #     });
+    #
+    #     </script>
+    #     </head>
+    #     <body>
+    #
+    #
+    #     <div id='maplegend' class='maplegend'
+    #         style='position: absolute; z-index:9999; border:2px solid grey; background-color:rgba(255, 255, 255, 0.8);
+    #         border-radius:6px; padding: 10px; font-size:14px; right: 20px; bottom: 20px;'>
+    #
+    #     <div class='legend-title'>Legend (draggable!)</div>
+    #     <div class='legend-scale'>
+    #         <ul class='legend-labels'>
+    #             <li><span style='background:red;opacity:0.7;'></span>Big</li>
+    #             <li><span style='background:orange;opacity:0.7;'></span>Medium</li>
+    #             <li><span style='background:green;opacity:0.7;'></span>Small</li>
+    #
+    #         </ul>
+    #     </div>
+    #     </div>
+    #
+    #     </body>
+    #     </html>
+    #
+    #     <style type='text/css'>
+    #         .maplegend .legend-title {
+    #             text-align: left;
+    #             margin-bottom: 5px;
+    #             font-weight: bold;
+    #             font-size: 90%;
+    #             }
+    #         .maplegend .legend-scale ul {
+    #             margin: 0;
+    #             margin-bottom: 5px;
+    #             padding: 0;
+    #             float: left;
+    #             list-style: none;
+    #             }
+    #         .maplegend .legend-scale ul li {
+    #             font-size: 80%;
+    #             list-style: none;
+    #             margin-left: 0;
+    #             line-height: 18px;
+    #             margin-bottom: 2px;
+    #             }
+    #         .maplegend ul.legend-labels li span {
+    #             display: block;
+    #             float: left;
+    #             height: 16px;
+    #             width: 30px;
+    #             margin-right: 5px;
+    #             margin-left: 0;
+    #             border: 1px solid #999;
+    #             }
+    #         .maplegend .legend-source {
+    #             font-size: 80%;
+    #             color: #777;
+    #             clear: both;
+    #             }
+    #         .maplegend a {
+    #             color: #777;
+    #             }
+    #     </style>
+    #     {% endmacro %}"""
+    #
+    #     macro = MacroElement()
+    #     macro._template = Template(template)
+    #
+    #     self.map.get_root().add_child(macro)
 
+    def add_categorical_legend(folium_map: fl.Map,
+    title: str,
+    colors: List[str],
+    labels: List[str],
+    ) -> fl.Map:
+        """
+        Given a Folium map, add to it a categorical legend with the given title, colors, and corresponding labels.
+        The given colors and labels will be listed in the legend from top to bottom.
+        Return the resulting map.
 
+        Based on `this example <http://nbviewer.jupyter.org/gist/talbertc-usgs/18f8901fc98f109f2b71156cf3ac81cd>`_.
+        """
+        # Error check
+        if len(colors) != len(labels):
+            raise ValueError("colors and labels must have the same length.")
 
-        legend_html = '''
-        {% macro html(this, kwargs) %}
-        <div style="
-            position: fixed;
-            bottom: 50px;
-            left: 50px;
-            width: 250px;
-            height: 80px;
-            z-index:9999;
-            font-size:14px;
-            ">
-            <p><a style="color:{colors};font-size:150%;margin-left:20px;">&diams;</a>&emsp;{labels}</p>
+        color_by_label = dict(zip(labels, colors))
+
+        # Make legend HTML
+        template = f"""
+        {{% macro html(this, kwargs) %}}
+
+        <!doctype html>
+        <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+        </head>
+        <body>
+        <div id='maplegend' class='maplegend'>
+            <div class='legend-title'>{title}</div>
+            <div class='legend-scale'>
+                <ul class='legend-labels'>
+        """
+
+        for label, color in color_by_label.items():
+            template += f"<li><span style='background:{color}'></span>{label}</li>"
+
+        template += """
+                </ul>
+            </div>
         </div>
-        <div style="
-            position: fixed;
-            bottom: 50px;
-            left: 50px;
-            width: 150px;
-            height: 80px;
-            z-index:9998;
-            font-size:14px;
-            background-color: #ffffff;
 
-            opacity: 0.7;
-            ">
-        </div>
+        </body>
+        </html>
+
+        <style type='text/css'>
+            .maplegend {
+                position: absolute;
+                z-index:9999;
+                background-color: rgba(255, 255, 255, 1);
+                border-radius: 5px;
+                border: 2px solid #bbb;
+                padding: 10px;
+                font-size:12px;
+                right: 10px;
+                bottom: 20px;
+                }
+            .maplegend .legend-title {
+                text-align: left;
+                margin-bottom: 5px;
+                font-weight: bold;
+                font-size: 90%;
+                }
+            .maplegend .legend-scale ul {
+                margin: 0;
+                margin-bottom: 5px;
+                padding: 0;
+                float: left;
+                list-style: none;
+                }
+            .maplegend .legend-scale ul li {
+                font-size: 80%;
+                list-style: none;
+                margin-left: 0;
+                line-height: 18px;
+                margin-bottom: 2px;
+                }
+            .maplegend ul.legend-labels li span {
+                display: block;
+                float: left;
+                height: 16px;
+                width: 30px;
+                margin-right: 5px;
+                margin-left: 0;
+                border: 0px solid #ccc;
+                }
+            .maplegend .legend-source {
+                font-size: 80%;
+                color: #777;
+                clear: both;
+                }
+            .maplegend a {
+                color: #777;
+                }
+        </style>
         {% endmacro %}
-        '''.format(colors=color, labels=label)
+        """
 
-        legend = branca.element.MacroElement()
-        legend._template = branca.element.Template(legend_html)
+        macro = bc.element.MacroElement()
+        macro._template = bc.element.Template(template)
+        self.map.get_root().add_child(macro)
 
-        self.map.get_root().add_child(legend)
-
-        # self.map.get_root().add_child(macro)
+        return self.map
 
 
     def show_or_save(self, option_show=False, option_save=False, map_name=None):
