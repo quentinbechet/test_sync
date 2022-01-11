@@ -342,11 +342,12 @@ class Map:
             title = input('Enter title for legend:')
         else:
             title = title
-        legend_categories = []
+        legend_categories = ""
         for label, color in self.dic_colors.items():
-            legend_categories.append("<li><span style='background:{color}'></span>{label}</li>")
+            legend_categories += f"<li><span style='background:{color}'></span>{label}</li>"
 
-        legend_html = f""
+        legend_html = f"""
+        {% macro html(this, kwargs) %}
         <div id='maplegend' class='maplegend'>
           <div class='legend-title'>{title}</div>
           <div class='legend-scale'>
@@ -382,43 +383,43 @@ class Map:
         css = """
 
         <style type='text/css'>
-          .maplegend .legend-title {
-            text-align: left;
-            margin-bottom: 5px;
-            font-weight: bold;
-            font-size: 90%;
-            }
-          .maplegend .legend-scale ul {
-            margin: 0;
-            margin-bottom: 5px;
-            padding: 0;
-            float: left;
-            list-style: none;
-            }
-          .maplegend .legend-scale ul li {
-            font-size: 80%;
-            list-style: none;
-            margin-left: 0;
-            line-height: 18px;
-            margin-bottom: 2px;
-            }
-          .maplegend ul.legend-labels li span {
-            display: block;
-            float: left;
-            height: 16px;
-            width: 30px;
-            margin-right: 5px;
-            margin-left: 0;
-            border: 1px solid #999;
-            }
-          .maplegend .legend-source {
-            font-size: 80%;
-            color: #777;
-            clear: both;
-            }
-          .maplegend a {
-            color: #777;
-            }
+            .maplegend .legend-title {
+                text-align: left;
+                margin-bottom: 5px;
+                font-weight: bold;
+                font-size: 90%;
+                }
+            .maplegend .legend-scale ul {
+                margin: 0;
+                margin-bottom: 5px;
+                padding: 0;
+                float: left;
+                list-style: none;
+                }
+            .maplegend .legend-scale ul li {
+                font-size: 80%;
+                list-style: none;
+                margin-left: 0;
+                line-height: 18px;
+                margin-bottom: 2px;
+                }
+            .maplegend ul.legend-labels li span {
+                display: block;
+                float: left;
+                height: 16px;
+                width: 30px;
+                margin-right: 5px;
+                margin-left: 0;
+                border: 1px solid #999;
+                }
+            .maplegend .legend-source {
+                font-size: 80%;
+                color: #777;
+                clear: both;
+                }
+            .maplegend a {
+                color: #777;
+                }
         </style>
         """
 
