@@ -444,8 +444,8 @@ class Map:
 
     def add_categorical_legend(self, folium_map,
     title: str,
-    colors: List[str],
-    labels: List[str],
+    colors,
+    labels,
     ):
         """
         Given a Folium map, add to it a categorical legend with the given title, colors, and corresponding labels.
