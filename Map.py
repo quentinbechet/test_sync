@@ -385,7 +385,7 @@ class Map:
         <div class='legend-title'>Legend (draggable!)</div>
         <div class='legend-scale'>
             <ul class='legend-labels'>
-            {legend_categories}
+            $legend_categories
             </ul>
         </div>
         </div>
@@ -431,7 +431,7 @@ class Map:
                 color: #777;
                 }
         </style>
-        {% endmacro %}""".format(legend_categories=legend_categories)
+        {% endmacro %}"""
 
         macro = MacroElement()
         macro._template = Template(template)
