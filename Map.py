@@ -434,7 +434,7 @@ class Map:
         {% endmacro %}"""
 
         macro = MacroElement()
-        macro._template = Template(template).safe_substitute(legend_categories=legend_categories)
+        macro._template = Template(template)
 
         self.map.get_root().add_child(macro)
 
