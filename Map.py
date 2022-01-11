@@ -541,8 +541,8 @@ class Map:
         {% endmacro %}
         """
 
-        macro = bc.element.MacroElement()
-        macro._template = bc.element.Template(template)
+        macro = branca.element.MacroElement()
+        macro._template = branca.element.Template(template)
         self.map.get_root().add_child(macro)
 
         return self.map
