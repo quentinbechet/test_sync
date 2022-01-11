@@ -336,25 +336,14 @@ class Map:
                                   show=False).add_to(self.map)
 
 
-    def add_categorical_legend(self, folium_map,
-    title: str,
-    colors,
-    labels,
-    ):
-        """
-        Given a Folium map, add to it a categorical legend with the given title, colors, and corresponding labels.
-        The given colors and labels will be listed in the legend from top to bottom.
-        Return the resulting map.
 
-        Based on `this example <http://nbviewer.jupyter.org/gist/talbertc-usgs/18f8901fc98f109f2b71156cf3ac81cd>`_.
-        """
-        # Error check
-        if len(colors) != len(labels):
-            raise ValueError("colors and labels must have the same length.")
+    def add_categorical_legend(self, title=None):
+        if title == None:
+            title = input('Enter title for legend:')
+        else:
+            title = title
+    
 
-        color_by_label = dict(zip(labels, colors))
-
-        # Make legend HTML
         template = f"""
         {{% macro html(this, kwargs) %}}
 
@@ -370,35 +359,38 @@ class Map:
             <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
             <script>
-            $( function() {
-                $( "#maplegend" ).draggable({
-                                start: function (event, ui) {
-                                    $(this).css({
+            $( function()
+                $( "#maplegend" ).draggable(
+                                start: function (event, ui)
+                                    $(this).css(
                                         right: "auto",
                                         top: "auto",
                                         bottom: "auto"
                                     });
                                 }
-                          });
+                            });
         });
 
-            </script>
+        </script>
         </head>
         <body>
+
+
         <div id='maplegend' class='maplegend'
             style='position: absolute; z-index:9999; border:2px solid grey; background-color:rgba(255, 255, 255, 0.8);
             border-radius:6px; padding: 10px; font-size:14px; right: 20px; bottom: 20px;'>
+
             <div class='legend-title'>{title}</div>
-            <div class='legend-scale'>
-                <ul class='legend-labels'>
+        <div class='legend-scale'>
+            <ul class='legend-labels'>
         """
 
-        for label, color in color_by_label.items():
+        for label, color in self.dic_colors.items():
             template += f"<li><span style='background:{color}'></span>{label}</li>"
 
         template += """
-                </ul>
-            </div>
+            </ul>
+        </div>
         </div>
 
         </body>
@@ -443,11 +435,11 @@ class Map:
                 color: #777;
                 }
         </style>
-        {% endmacro %}
-        """
+        {% endmacro %}"""
 
-        macro = branca.element.MacroElement()
-        macro._template = branca.element.Template(template)
+        macro = MacroElement()
+        macro._template = Template(template)
+
         self.map.get_root().add_child(macro)
 
 
