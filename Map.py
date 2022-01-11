@@ -437,10 +437,10 @@ class Map:
             </style>
             {% endmacro %}"""
 
-            macro = MacroElement()
-            macro._template = Template(template)
+        macro = MacroElement()
+        macro._template = Template(template)
 
-            self.map.get_root().add_child(macro)
+        self.map.get_root().add_child(macro)
 
 
     def show_or_save(self, option_show=False, option_save=False, map_name=None):
