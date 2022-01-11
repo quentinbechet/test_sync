@@ -347,6 +347,7 @@ class Map:
             legend_categories += f"<li><span style='background:{color}'></span>{label}</li>"
 
         legend_html = f"""
+        {% macro html(this, kwargs) %}
         <div id='maplegend' class='maplegend'>
           <div class='legend-title'>{title}</div>
           <div class='legend-scale'>
@@ -382,16 +383,6 @@ class Map:
         css = """
 
         <style type='text/css'>
-          .maplegend {
-            z-index:9999;
-            float:right;
-            background-color: rgba(255, 255, 255, 1);
-            border-radius: 5px;
-            border: 2px solid #bbb;
-            padding: 10px;
-            font-size:12px;
-            positon: relative;
-          }
           .maplegend .legend-title {
             text-align: left;
             margin-bottom: 5px;
