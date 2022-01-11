@@ -224,6 +224,9 @@ class Map:
                     dic_colors[None] = 'Unknown'
                     dic_colors[np.nan] = 'Unknown'
 
+                    # Remove Unknown colors keys
+                    dic_colors = {key:value for key,value in dic_colors.items() if (value is not 'Unknown')}
+
                     self.dic_colors = dic_colors
 
                     # Apply the dictionary to each pipe
