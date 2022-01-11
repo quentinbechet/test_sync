@@ -433,6 +433,7 @@ class Map:
         </style>
         {% endmacro %}"""
 
+        self.template = template
         macro = MacroElement()
         macro._template = Template(template)
 
