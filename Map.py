@@ -344,8 +344,8 @@ class Map:
             title = title
 
 
-        template = f"""
-        {{% macro html(this, kwargs) %}}
+        template = """
+        {% macro html(this, kwargs) %}
 
         <!doctype html>
         <html lang="en">
@@ -359,10 +359,10 @@ class Map:
             <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
             <script>
-            $( function()
-                $( "#maplegend" ).draggable(
-                                start: function (event, ui)
-                                    $(this).css(
+            $( function() {
+                $( "#maplegend" ).draggable({
+                                start: function (event, ui) {
+                                    $(this).css({
                                         right: "auto",
                                         top: "auto",
                                         bottom: "auto"
@@ -373,6 +373,10 @@ class Map:
 
             </script>
         </head>
+
+        """
+
+        template +=f"""
         <body>
 
 
@@ -384,7 +388,6 @@ class Map:
         <div class='legend-scale'>
             <ul class='legend-labels'>
         """
-
         for label, color in self.dic_colors.items():
             template += f"<li><span style='background:{color}'></span>{label}</li>"
 
@@ -434,9 +437,8 @@ class Map:
             .maplegend a {
                 color: #777;
                 }
-        </style>
-        {% endmacro %}
-        """
+            </style>
+            {% endmacro %}"""
 
         macro = MacroElement()
         macro._template = Template(template)
