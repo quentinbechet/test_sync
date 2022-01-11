@@ -385,20 +385,7 @@ class Map:
         <div class='legend-title'>Legend (draggable!)</div>
         <div class='legend-scale'>
             <ul class='legend-labels'>
-                <li><span style='background:#1f77b4'></span>PVC</li>
-                <li><span style='background:#aec7e8'></span>Fte</li>
-                <li><span style='background:#ff7f0e'></span>AC</li>
-                <li><span style='background:#ffbb78'></span>AUT</li>
-                <li><span style='background:#2ca02c'></span>GV</li>
-                <li><span style='background:#98df8a'></span>BAT</li>
-                <li><span style='background:#d62728'></span>B</li>
-                <li><span style='background:#ff9896'></span>INC</li>
-                <li><span style='background:#9467bd'></span>PE</li>
-                <li><span style='background:#c5b0d5'></span>FD</li>
-                <li><span style='background:#8c564b'></span>PVC CR8</li>
-                <li><span style='background:#c49c94'></span>FG</li>
-                <li><span style='background:{color}'></span>None</li>
-                <li><span style='background:{color}'></span>nan</li>
+                {legend_categories}
             </ul>
         </div>
         </div>
@@ -444,7 +431,7 @@ class Map:
                 color: #777;
                 }
         </style>
-        {% endmacro %}"""
+        {% endmacro %}""".format(legend_categories=legend_categories)
 
         macro = MacroElement()
         macro._template = Template(template)
