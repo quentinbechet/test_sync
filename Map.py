@@ -359,8 +359,7 @@ class Map:
             z-index:9999;
             font-size:14px;
             ">
-            <p><a style="color:#000000;font-size:150%;margin-left:20px;">&diams;</a>&emsp;Heat</p>
-            <p><a style="color:#03cafc;font-size:150%;margin-left:20px;">&diams;</a>&emsp;Cold</p>
+            <p><a style="color:{colors};font-size:150%;margin-left:20px;">&diams;</a>&emsp;{labels}</p>
         </div>
         <div style="
             position: fixed;
@@ -376,7 +375,7 @@ class Map:
             ">
         </div>
         {% endmacro %}
-        '''
+        '''.format(colors=color, labels=label)
 
         legend = branca.element.MacroElement()
         legend._template = branca.element.Template(legend_html)
