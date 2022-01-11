@@ -394,8 +394,8 @@ class Map:
         # Remove Unknown colors keys
         self.dic_colors = {key:value for key, value in self.dic_colors.items() if (value is not 'Unknown')}
 
-        # for label, color in self.dic_colors.items():
-        #     template += f"<li><span style='background:{color}'></span>{label}</li>"
+        for label, color in self.dic_colors.items():
+            template += f"<li><span style='background:{color}'></span>{label}</li>"
 
         template += """
             </ul>
