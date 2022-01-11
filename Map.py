@@ -346,8 +346,7 @@ class Map:
         for label, color in self.dic_colors.items():
             legend_categories += f"<li><span style='background:{color}'></span>{label}</li>"
 
-        legend_html = f"""
-        {% macro html(this, kwargs) %}
+        legend_html = f""
         <div id='maplegend' class='maplegend'>
           <div class='legend-title'>{title}</div>
           <div class='legend-scale'>
